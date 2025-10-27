@@ -710,6 +710,17 @@ export default function Home() {
       const logEntry = `${new Date().toLocaleTimeString()}: "${trimmed}"`;
       setLogs((prev) => [...prev, logEntry]);
 
+
+      // // //////////////////////  POST API CALL  ///////////////////////////////////////////// 
+      // const res = await fetch("/api/recommend", {
+      //   method: "POST",
+      //   headers: { "content-type": "application/json" },
+      //   body: JSON.stringify({ q: trimmed }),
+      //   // credentials: "include", // <- uncomment if your API needs cookies/auth
+      // });
+
+      // if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      ///////////////////////////////////////////////////////////////////////////////////////
       // Simulated API response
       const data = mockResponse(trimmed);
 
