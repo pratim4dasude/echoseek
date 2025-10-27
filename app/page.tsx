@@ -15,7 +15,7 @@ export default function Home() {
     setIsSubmitting(true);
 
     try {
-      const logEntry = `User searched: "${trimmed}" at ${new Date().toLocaleTimeString()}`;
+      const logEntry = `${new Date().toLocaleTimeString()}: "${trimmed}" `;
       console.log(logEntry);
       setLogs((prev) => [...prev, logEntry]);
     } finally {
@@ -35,7 +35,7 @@ export default function Home() {
   }, [showLogs]);
 
   return (
-    <main className="min-h-svh bg-gradient-to-b from-orange-100 via-white to-orange-50 text-zinc-800 flex items-center justify-center p-6 pb-28">
+    <main className="min-h-svh bg-linear-to-b from-orange-100 via-white to-orange-50 text-zinc-800 flex items-center justify-center p-6 pb-28">
       <div className="w-full max-w-7xl text-center">
         {/* Header */}
         <div className="mb-8">
@@ -96,22 +96,17 @@ export default function Home() {
                   <span className="font-medium">Debug Logs</span>
                   <div className="flex items-center gap-3">
                     <span className="text-zinc-400">{logs.length} entries</span>
-                    <button
-                      onClick={clearLogs}
-                      className="rounded-md border border-zinc-300 bg-white px-2 py-1 hover:bg-zinc-50"
-                    >
-                      Clear
-                    </button>
+
                   </div>
                 </div>
 
                 {/* ✅ left-aligned logs, full width, scrollable if long */}
-                <div className="px-4 pb-4 font-mono text-sm text-zinc-800 text-left whitespace-pre-wrap overflow-y-auto max-h-[70vh] min-h-[45rem] w-full">
+                <div className="px-4 pb-4 font-mono text-sm text-zinc-800 text-left whitespace-pre-wrap overflow-y-auto max-h-[70vh] min-h-180 w-full">
                   {logs.length > 0 ? (
                     logs.map((log, i) => (
                       <div
                         key={i}
-                        className="py-1 border-b border-zinc-100 last:border-0 break-words text-left"
+                        className="py-1 border-b border-zinc-100 last:border-0 wrap-break-word text-left"
                       >
                         {log}
                       </div>
