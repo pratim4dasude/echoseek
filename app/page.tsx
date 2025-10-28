@@ -572,51 +572,51 @@ function mockResponse(query: string): RecommendResponse {
     return { text: `Here’s a text-only response for "${query}".`, links: [] };
   }
   return {
-      text: `For "${query}", these outfits are trending on Amazon right now.`,
-      links: [
-        {
-          id: "1",
-          title: "Slim Fit Blue Jeans for Men",
-          url: "https://www.amazon.in/Peter-England-Striped-Shirt-PCSFSSLPA19862_Pink/dp/B0F9DYTWW7/?_encoding=UTF8&ref_=pd_hp_d_btf_ci_mcx_mr_ca_id_hp_d&psc=1",
-          image: "https://m.media-amazon.com/images/I/71AJio3+JQL._SY550_.jpg",
-          price: "₹1,499",
-          rating: 4.2,
-        },
-        {
-          id: "2",
-          title: "Classic Black Pants",
-          url: "https://www.amazon.in/dp/B0CXYZ5678",
-          image: "https://m.media-amazon.com/images/I/61uKxD1V5eL._AC_UL480_FMwebp_QL65_.jpg",
-          price: "₹1,299",
-          rating: 4.4,
-        },
-        {
-          id: "3",
-          title: "Party Wear Denim Jeans",
-          url: "https://www.amazon.in/dp/B0B4ABC999",
-          image: "https://m.media-amazon.com/images/I/71X9RrQPVnL._AC_UL480_FMwebp_QL65_.jpg",
-          price: "₹1,899",
-          rating: 4.1,
-        },
-        {
-          id: "4",
-          title: "Men’s Tapered Chinos",
-          url: "https://www.amazon.in/dp/B0B2CDE123",
-          image: "https://m.media-amazon.com/images/I/61otbq5F7xL._AC_UL480_FMwebp_QL65_.jpg",
-          price: "₹1,199",
-          rating: 4.0,
-        },
-        {
-          id: "5",
-          title: "Casual Cotton Pants",
-          url: "https://www.amazon.in/dp/B09FABC890",
-          image: "https://m.media-amazon.com/images/I/71DnDx1yQBL._AC_UL480_FMwebp_QL65_.jpg",
-          price: "₹999",
-          rating: 4.3,
-        },
-      ],
-    };
-  }
+    text: `For "${query}", these outfits are trending on Amazon right now.`,
+    links: [
+      {
+        id: "1",
+        title: "Slim Fit Blue Jeans for Men",
+        url: "https://www.amazon.in/Peter-England-Striped-Shirt-PCSFSSLPA19862_Pink/dp/B0F9DYTWW7/?_encoding=UTF8&ref_=pd_hp_d_btf_ci_mcx_mr_ca_id_hp_d&psc=1",
+        image: "https://m.media-amazon.com/images/I/71AJio3+JQL._SY550_.jpg",
+        price: "₹1,499",
+        rating: 4.2,
+      },
+      {
+        id: "2",
+        title: "Classic Black Pants",
+        url: "https://www.amazon.in/dp/B0CXYZ5678",
+        image: "https://m.media-amazon.com/images/I/61uKxD1V5eL._AC_UL480_FMwebp_QL65_.jpg",
+        price: "₹1,299",
+        rating: 4.4,
+      },
+      {
+        id: "3",
+        title: "Party Wear Denim Jeans",
+        url: "https://www.amazon.in/dp/B0B4ABC999",
+        image: "https://m.media-amazon.com/images/I/71X9RrQPVnL._AC_UL480_FMwebp_QL65_.jpg",
+        price: "₹1,899",
+        rating: 4.1,
+      },
+      {
+        id: "4",
+        title: "Men’s Tapered Chinos",
+        url: "https://www.amazon.in/dp/B0B2CDE123",
+        image: "https://m.media-amazon.com/images/I/61otbq5F7xL._AC_UL480_FMwebp_QL65_.jpg",
+        price: "₹1,199",
+        rating: 4.0,
+      },
+      {
+        id: "5",
+        title: "Casual Cotton Pants",
+        url: "https://www.amazon.in/dp/B09FABC890",
+        image: "https://m.media-amazon.com/images/I/71DnDx1yQBL._AC_UL480_FMwebp_QL65_.jpg",
+        price: "₹999",
+        rating: 4.3,
+      },
+    ],
+  };
+}
 
 /* ---------------- Search Bar Component ---------------- */
 function SearchBar({
