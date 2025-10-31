@@ -11,3 +11,8 @@ export interface RecommendResponse {
     text: string;
     links: ProductLink[];
 }
+
+export type LLMResponse = {
+    text: string;
+    links?: ProductLink[];
+} | Record<string, unknown>; 

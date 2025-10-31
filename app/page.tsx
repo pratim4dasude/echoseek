@@ -566,6 +566,8 @@ import { useState, FormEvent, useEffect, useRef } from "react";
 import { RecommendResponse } from "./types";
 import ProductCard from "./components/ProductCard";
 
+import type { ProductLink } from "@/app/types";
+
 /* ---------------- Temporary Mock ---------------- */
 function mockResponse(query: string): RecommendResponse {
   if (query.toLowerCase().includes("text")) {
@@ -616,6 +618,91 @@ function mockResponse(query: string): RecommendResponse {
       },
     ],
   };
+}
+
+export function normalizeResponse(raw: unknown, query: string): RecommendResponse {
+  try {
+    // If backend already gives { text, links }
+    if (
+      raw &&
+      typeof raw === "object" &&
+      "text" in raw &&
+      "links" in raw &&
+      Array.isArray((raw as { links: unknown }).links)
+    ) {
+      return raw as RecommendResponse;
+    }
+
+    // If backend returns a list (array)
+    if (Array.isArray(raw)) {
+      const links: ProductLink[] = raw.map((item, idx) => {
+        // item has type "unknown" — narrow it safely
+        const obj = typeof item === "object" && item !== null ? (item as Record<string, unknown>) : {};
+
+        const id = String(obj.id ?? idx + 1);
+        const title =
+          (obj.title as string) ||
+          (obj.name as string) ||
+          (obj.label as string) ||
+          (obj.product_title as string) ||
+          "Untitled Product";
+        const url =
+          (obj.url as string) ||
+          (obj.link as string) ||
+          (obj.href as string) ||
+          (obj.product_url as string) ||
+          "#";
+        const image =
+          (obj.image as string) ||
+          (obj.image_url as string) ||
+          (obj.thumbnail as string) ||
+          (obj.thumb as string) ||
+          (obj.img as string);
+        const price =
+          (obj.price as string) ||
+          (obj.price_text as string) ||
+          (obj.price_str as string) ||
+          (obj.amount as string);
+        const rating =
+          typeof obj.rating === "number"
+            ? obj.rating
+            : parseFloat(String(obj.rating ?? "")) || undefined;
+
+        return { id, title, url, image, price, rating };
+      });
+
+      return {
+        text: `For "${query}", here’s what I found.`,
+        links,
+      };
+    }
+
+    // If backend wraps the array (e.g. { results: [...] } etc.)
+    if (raw && typeof raw === "object") {
+      const wrapper = raw as Record<string, unknown>;
+      const arr =
+        wrapper.results ||
+        wrapper.items ||
+        wrapper.products ||
+        wrapper.data ||
+        wrapper.links;
+
+      if (Array.isArray(arr)) return normalizeResponse(arr, query);
+    }
+
+    // Fallback — text only
+    return {
+      text: `For "${query}", here’s the response:\n${JSON.stringify(raw, null, 2)}`,
+      links: [],
+    };
+  } catch (err) {
+    const msg = err instanceof Error ? err.message : String(err);
+    console.error("normalizeResponse error:", msg);
+    return {
+      text: `Could not parse response for "${query}".`,
+      links: [],
+    };
+  }
 }
 
 /* ---------------- Search Bar Component ---------------- */
@@ -711,23 +798,37 @@ export default function Home() {
       setLogs((prev) => [...prev, logEntry]);
 
 
-      // // //////////////////////  POST API CALL  ///////////////////////////////////////////// 
-      // const res = await fetch("/api/recommend", {
-      //   method: "POST",
-      //   headers: { "content-type": "application/json" },
-      //   body: JSON.stringify({ q: trimmed }),
-      //   // credentials: "include", // <- uncomment if your API needs cookies/auth
-      // });
+      // //////////////////////  POST API CALL  /////////////////////////////////////////////
+      console.log("Sending to /api/llm:", { q: trimmed });
 
-      // if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      ///////////////////////////////////////////////////////////////////////////////////////
+      const res = await fetch("/api/llm", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ q: trimmed }),
+      });
+
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+
+      const data_backend = await res.json();
+      const data_backend_ff = normalizeResponse(data_backend, trimmed);
+
+      console.log("Received from /api/llm:", data_backend_ff);
+
+      // /////////////////////////////////////////////////////////////////////////////////////
       // Simulated API response
-      const data = mockResponse(trimmed);
+
+      const data = data_backend_ff
+
+      // const data = mockResponse(trimmed);
+      console.log(data)
+
+
+
 
       setLogs((prev) => [...prev, `Response: ${JSON.stringify(data)}`]);
-
-      // Push assistant response
       setMessages((prev) => [...prev, { role: "assistant", content: data }]);
+
+
     } catch (err) {
       if (err instanceof Error) setError(err.message);
       else setError("Something went wrong");
