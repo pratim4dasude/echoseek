@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "EchoSeek",
-  description: "Generative Search for your Style for amazon stylish serach ",
+  description: "Generative Search amazon stylish Search for it ",
 };
 
 export default function RootLayout({
