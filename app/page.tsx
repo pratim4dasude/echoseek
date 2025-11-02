@@ -774,6 +774,18 @@ export default function Home() {
 
   const docked = messages.length > 0;
 
+  useEffect(() => {
+    const nav = performance.getEntriesByType("navigation")[0] as PerformanceNavigationTiming | undefined;
+    const isHardReload = nav?.type === "reload";  
+    const firstVisitThisTab = !sessionStorage.getItem("echoseek_seen");
+
+    if (isHardReload || firstVisitThisTab) {
+      fetch("/api/reset", { method: "POST" }).catch(() => { });
+    }
+
+    sessionStorage.setItem("echoseek_seen", "1");
+  }, []);
+
   /* Auto scroll on new message */
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
