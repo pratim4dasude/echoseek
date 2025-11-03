@@ -5,4 +5,8 @@ venv/
 # Secret File
 .env
 
+# PyCharm project settings
+.idea/
+
+# Python bytecode cache
 __pycache__/
