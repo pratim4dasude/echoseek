@@ -4,3 +4,5 @@ venv/
 
 # Secret File
 .env
+
+__pycache__/
