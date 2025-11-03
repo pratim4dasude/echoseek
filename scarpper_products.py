@@ -626,7 +626,7 @@ def openaiworker(INPUT_JSON, OUTPUT_JSON="products_enriched.json"):
 
 # ////////////////////////// ^^^^^^^^^^^^^^^^^^^^^ OPEN AI WORKER  ^^^^^^^^^^^ ////////////////////////////////////
 
-def amazom_scraper_working(keyword: str, max_pages: int, top_n: int, base_url="https://www.amazon.in"):
+def amazom_scraper_working(keyword: str, max_pages: int, top_n: int, base_url="https://www.amazon.in/"):
 
     results = scrape_amazon_links(
         base_url=base_url,
@@ -652,5 +652,5 @@ def amazom_scraper_working(keyword: str, max_pages: int, top_n: int, base_url="h
 
 
 if __name__ == "__main__":
-    k = amazom_scraper_working("women dress", 1, 3, "https://www.amazon.in")
+    k = amazom_scraper_working("women dress", 1, 3, "https://www.amazon.in/")
     print(k)

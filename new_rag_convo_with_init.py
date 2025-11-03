@@ -730,7 +730,7 @@ class ChatRAG:
     def _ensure_initialized(self, first_query: Optional[str] = None):
         if not self.rag_chain_first or not self.rag_chain_chat or not self.vectorstore:
             seed = (first_query or "").strip()
-            path, products = build_products_from_query(seed, max_k=3, scrap_top_n=10, scrap_max_page=1)
+            path, products = build_products_from_query(seed, max_k=3, scrap_top_n=5, scrap_max_page=1)
             if not products:
                 products = load_catalog_from_file(path) if path else []
             if not products:

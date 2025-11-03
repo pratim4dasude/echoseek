@@ -74,4 +74,4 @@ def handle_llm_query(data: LLMQueryRequest, x_reset: Optional[str] = Header(defa
 if __name__ == "__main__":
     import uvicorn
 
-    uvicorn.run("bcked:app", host="0.0.0.0", port=8000, reload=True)
+    uvicorn.run("backend:app", host="0.0.0.0", port=8000, reload=True)

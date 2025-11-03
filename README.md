@@ -27,13 +27,15 @@ Follow these steps to set up and run the service locally.
 * Your API keys/credentials configured (typically via your local AWS CLI configuration).
 
 ### 2. Setup
+### 2. Setup
 
-1.  **Clone the Repository (and switch to the backend branch):**
+1.  **Clone the Backend Branch Only:**
+    Use the `--single-branch` option to clone *only* the contents of the dedicated `backend` branch.
     ```bash
-    git clone [https://github.com/pratim4dasude/echoseek.git](https://github.com/pratim4dasude/echoseek.git)
+    git clone --single-branch --branch backend https://github.com/pratim4dasude/echoseek.git
     cd echoseek
-    git checkout backend
     ```
+    > **Note:** If you already cloned the full repository, you can simply use `cd echoseek` and then `git checkout backend`.
 
 2.  **Create and Activate Virtual Environment:**
     ```bash
@@ -52,24 +54,80 @@ Follow these steps to set up and run the service locally.
 
 ### 3. Environment Variables
 
-This service requires specific endpoints and configuration settings.
+This service requires specific security credentials and API keys.
 
 1.  **Create your secret file:** Copy the example file to create your local environment file.
     ```bash
     cp .env.example .env
     ```
 
-2.  **Update `.env`:** Open the new `.env` file and replace the placeholder values with your actual LLM endpoint names and AWS region:
+2.  **Update `.env`:** Open the new `.env` file and replace the placeholder values with your credentials:
+
     ```ini
-    LLM_ENDPOINT_NAME="YOUR_ACTUAL_LLM_ENDPOINT"
-    AWS_REGION="your-aws-region"
-    # ... and any other required keys
+    # AWS/SageMaker Execution Role ARN
+    SAGEMAKER_EXECUTION_ROLE_ARN=""
+
+    # NVIDIA GPU Cloud (NGC) API Key 
+    NGC_API_KEY="" 
+    
+    # OpenAI API Key 
+    OPENAI_API_KEY=""
     ```
 
-### 4. Running the Service
+---
+### 4. Deploying the SageMaker Endpoints
 
-[Briefly explain how to run your main script or service entry point.]
+Before running the main RAG service, you **must** deploy the required LLM and Embedding models to AWS SageMaker Endpoints using the included helper files.
 
-*Example:*
+#### ⚠️ IAM Role Requirement
+
+Ensure that the IAM role associated with your AWS environment (the role launching the SageMaker tasks) has the necessary permissions. You **must** have the following policy attached:
+
+* **`AmazonEC2ContainerRegistryFullAccess`**
+
+This policy is required to create the two private ECR repositories that will host the Docker images for the models.
+
+#### 1. Start Docker Desktop
+
+Ensure **Docker Desktop is running** on your local machine, as the deployment script requires it to build and push the necessary container images.
+
+#### 2. Run Endpoint Creation Scripts
+
+Navigate to the `sagemaker_endpoint_creator` directory and execute the endpoint creation functions for both the LLM and the Embedding model.
+
+The files contain functions like `embed_endpoint_creator()` and `llm_endpoint_creator()` that handle:
+* `display_endpoints()`
+* `prepare_and_push_ecr_image()` (Requires Docker)
+* `deploy_sagemaker_endpoint()`
+
+Run both scripts sequentially (the exact execution command will depend on how these files are structured, but this is the general idea):
+
 ```bash
-python main_rag_service.py
+# Example command - adjust based on your file structure
+# Execute the script to create the Embedding Endpoint
+python sagemaker_endpoint_creator/embed_endpoint_file.py 
+
+# Execute the script to create the LLM Endpoint
+python sagemaker_endpoint_creator/llm_endpoint_file.py
+```
+
+### 5. Endpoint Validation
+
+After the endpoints show an **'InService'** status on AWS, run the standalone test files to confirm local connectivity via LangChain.
+
+```bash
+# Test the Generative LLM Endpoint connection
+python llm_standaloe_langcahin.py
+
+# Test the Embedding Model Endpoint connection
+python embed_standalone_langchain.py
+```
+
+### 6. Running the RAG Service
+
+Once the SageMaker Endpoints are active and validated, you can start the local Python RAG server which will handle API calls from the frontend application.
+
+```bash
+python backend.py
+```
+
