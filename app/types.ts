@@ -1,8 +1,8 @@
 export interface ProductLink {
     id: string;
     title: string;
-    url: string;   // full amazon link (https://...)
-    image: string; // full image link
+    url: string;   
+    image: string; 
     price?: string;
     rating?: number;
 }
